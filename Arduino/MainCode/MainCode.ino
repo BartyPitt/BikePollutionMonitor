@@ -1,16 +1,24 @@
-#include <Arduino.h>
+#include <Ticker.h>
+
+#include "Arduino.h"
+
+
+
 #include <Adafruit_GPS.h>
+#include <Ticker.h>
+#include <logger_spiffs.h>
 
 //Extra headers files that I made to help myself.
 //Passwords.h Should not exist for someone else.......
-#include "../Passwords.h"
+//#include "../Passwords.h"
 #include "DebugMacros.h"
 #include "PinConfig.h" // Include the pins in a seperate file to make my life easier.
 
 Adafruit_GPS GPS(&Wire); //PLEASE DONT BREAK :(
 #define GPSECHO false
 
-uint32_t timer = millis();
+LoggerSPIFFS myLog("/log/Data.log");
+
 
 
 typedef struct DataStoragePoints {
@@ -19,15 +27,14 @@ typedef struct DataStoragePoints {
   int32_t lat;
   uint8_t seconds;
   uint8_t hours;
-  unint8_t mins;
+  uint8_t mins;
 }DataStoragePoint;
-
 
 
 void setup() {
   Serial.begin(115200);
   MainDebugPrint("Intialising");
-  pinMode(LedPin , OUTPUT)
+  pinMode(LedPin , OUTPUT);
   // put your setup code here, to run once:
 
   GPS.begin(0x10);
@@ -36,6 +43,7 @@ void setup() {
   GPS.sendCommand(PGCMD_ANTENNA);
   delay(1000);
   GpsData(PMTK_Q_RELEASE);
+  SPIFFS.begin();
 }
 
 void loop() {
@@ -51,5 +59,16 @@ bool GatherReadings(DataStoragePoint* Output){
   Output->hours = GPS.hour;
   Output->lat = GPS.latitude_fixed;
   Output->longboy = GPS.latitude_fixed;
-  return true
+  return true;
+}
+
+bool LogReadings(DataStoragePoint* Output){
+  
+  //This is a terrible Idea however it is fast to code soo it is being done like this.
+  return false;
+}
+
+bool PrintAllReadins(){
+  myLog.flush();
+  return true;
 }

@@ -1,5 +1,5 @@
-#define GpsData 1
-
+#define GpsData 
+#define MainDebug
 
 #ifdef GpsData
     #define GpsDataPrint(X) Serial.println(X)
@@ -12,5 +12,3 @@
 #else
     #define MainDebugPrint(X)
 #endif
-
-Serial.p
