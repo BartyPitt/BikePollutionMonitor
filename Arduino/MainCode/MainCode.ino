@@ -43,7 +43,9 @@ void setup() {
   GPS.sendCommand(PGCMD_ANTENNA);
   delay(1000);
   GpsData(PMTK_Q_RELEASE);
-  SPIFFS.begin();
+  myLog.begin();
+  myLog.setFlusherCallback(senderHelp);
+  mylog.flush();
 }
 
 void loop() {
@@ -63,12 +65,37 @@ bool GatherReadings(DataStoragePoint* Output){
 }
 
 bool LogReadings(DataStoragePoint* Output){
-  
+  String Gas = String(Output->GasReading , HEX);
+  String seconds = String(Output->seconds , HEX);
+  String mins = String(Output->mins , HEX);
+  String hours = String(Output->hours , HEX);
+  String lat = String(Output->lat , HEX);
+  String longboy = String(Output->longboy , HEX);
+  String BigString = String("$" + Gas + "," + seconds + "," + mins + "," + hours +  "," + lat  + "," +  longboy + "£");
+
+  myLog.append(BigString.c_str(),false);
+
+
   //This is a terrible Idea however it is fast to code soo it is being done like this.
   return false;
 }
 
 bool PrintAllReadins(){
   myLog.flush();
+  return true;
+}
+
+
+// This function needs changing to a network flusher. TBC
+bool senderHelp(char* buffer, int n){
+  int index=0;
+  // Check if there is another string to print
+  while(index<n && strlen(&buffer[index])>0){
+    Serial.print("---");
+    int bytePrinted=Serial.print(&buffer[index]);
+    Serial.println("---");
+    // +1, the '\0' is processed
+    index += bytePrinted+1;
+  }
   return true;
 }
