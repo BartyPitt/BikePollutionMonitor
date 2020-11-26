@@ -49,6 +49,9 @@ void setup() {
 }
 
 void loop() {
+  DataStoragePoint DataStore;
+  GatherReadings(&DataStore);
+  LogReadings(&DataStore)
   // put your main code here, to run repeatedly:
 
 }
@@ -77,7 +80,7 @@ bool LogReadings(DataStoragePoint* Output){
 
 
   //This is a terrible Idea however it is fast to code soo it is being done like this.
-  return false;
+  return true;
 }
 
 bool PrintAllReadins(){
