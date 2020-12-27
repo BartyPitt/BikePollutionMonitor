@@ -1,9 +1,6 @@
 #include <Ticker.h>
 
 #include "Arduino.h"
-
-
-
 #include <Adafruit_GPS.h>
 #include <Ticker.h>
 #include <logger_spiffs.h>
@@ -14,7 +11,8 @@
 #include "DebugMacros.h"
 #include "PinConfig.h" // Include the pins in a seperate file to make my life easier.
 
-Adafruit_GPS GPS(&Wire); //PLEASE DONT BREAK :(
+Adafruit_GPS GPS(&Wire); //PLEASE DONT BREAK
+// The Gps is attached to the defult i2c pins , atleast I hope it is. 
 #define GPSECHO false
 
 LoggerSPIFFS myLog("/log/Data.log");
@@ -35,7 +33,6 @@ void setup() {
   Serial.begin(115200);
   MainDebugPrint("Intialising");
   pinMode(LedPin , OUTPUT);
-  // put your setup code here, to run once:
 
   GPS.begin(0x10);
   GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
@@ -45,13 +42,13 @@ void setup() {
   GpsData(PMTK_Q_RELEASE);
   myLog.begin();
   myLog.setFlusherCallback(senderHelp);
-  mylog.flush();
+  myLog.flush();
 }
 
 void loop() {
   DataStoragePoint DataStore;
   GatherReadings(&DataStore);
-  LogReadings(&DataStore)
+  LogReadings(&DataStore);
   // put your main code here, to run repeatedly:
 
 }
